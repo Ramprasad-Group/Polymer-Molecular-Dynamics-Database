@@ -24,17 +24,26 @@ function Page(props: {
   }[];
 }) {
   return (
-    <ul>
-      {props.property.map((entry) => (
-        <li key={entry.smiles}>
-          {entry.smiles}
-          {entry.value}
-          {entry.gas ? entry.gas : ""}
-          {entry.solvent_smiles ? entry.solvent_smiles : ""}
-          {entry.ratio ? entry.ratio : ""}
-        </li>
-      ))}
-    </ul>
+    <>
+      <table>
+        <tr>
+          <th>SMILES</th>
+          <th>Value</th>
+          {props.property[0].gas ? <th>Gas</th> : ""}
+          {props.property[0].solvent_smiles ? <th>Solvent SMILES</th> : ""}
+          {props.property[0].ratio ? <th>Ratio</th> : ""}
+        </tr>
+        {props.property.map((entry) => (
+          <tr>
+            <td>{entry.smiles}</td>
+            <td>{entry.value}</td>
+            {entry.gas ? <td>{entry.gas}</td> : null}
+            {entry.solvent_smiles ? <td>{entry.solvent_smiles}</td> : null}
+            {entry.ratio ? <td>{entry.ratio}</td> : null}
+          </tr>
+        ))}
+      </table>
+    </>
   );
 }
 

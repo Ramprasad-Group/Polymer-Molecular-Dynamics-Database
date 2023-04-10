@@ -32,7 +32,11 @@ export default function Home() {
 
         <div className={styles.grid}>
           {Object.keys(properties).map((slug) => (
-            <Link href={`/properties/${slug}`} className={styles.card}>
+            <Link
+              key={slug}
+              href={`/properties/${slug}`}
+              className={styles.card}
+            >
               <h2 className={inter.className}>
                 {(properties as any)[slug]} <span>-&gt;</span>
               </h2>

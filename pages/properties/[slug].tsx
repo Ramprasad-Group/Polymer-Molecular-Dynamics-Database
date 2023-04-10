@@ -33,8 +33,8 @@ function Page(props: {
           {props.property[0].solvent_smiles ? <th>Solvent SMILES</th> : ""}
           {props.property[0].ratio ? <th>Ratio</th> : ""}
         </tr>
-        {props.property.map((entry) => (
-          <tr>
+        {props.property.map((entry, i) => (
+          <tr key={i}>
             <td>{entry.smiles}</td>
             <td>{entry.value}</td>
             {entry.gas ? <td>{entry.gas}</td> : null}

@@ -7,7 +7,7 @@ interface Params extends ParsedUrlQuery {
   slug: string;
 }
 
-const properties = {
+export const properties = {
   Tg: "Glass Transition Temperature",
   gas_diffusivity: "Glass Diffusivity",
   gas_solubility: "Gas Solubility",

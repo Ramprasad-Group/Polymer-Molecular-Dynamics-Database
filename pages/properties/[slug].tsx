@@ -9,7 +9,7 @@ interface Params extends ParsedUrlQuery {
 
 export const properties = {
   Tg: "Glass Transition Temperature",
-  gas_diffusivity: "Glass Diffusivity",
+  gas_diffusivity: "Gas Diffusivity",
   gas_solubility: "Gas Solubility",
   solvent_diffusivity: "Solvent Diffusivity",
 };
@@ -24,26 +24,63 @@ function Page(props: {
   }[];
 }) {
   return (
-    <>
-      <table>
-        <tr>
-          <th>SMILES</th>
-          <th>Value</th>
-          {props.property[0].gas ? <th>Gas</th> : ""}
-          {props.property[0].solvent_smiles ? <th>Solvent SMILES</th> : ""}
-          {props.property[0].ratio ? <th>Ratio</th> : ""}
-        </tr>
-        {props.property.map((entry, i) => (
-          <tr key={i}>
-            <td>{entry.smiles}</td>
-            <td>{entry.value}</td>
-            {entry.gas ? <td>{entry.gas}</td> : null}
-            {entry.solvent_smiles ? <td>{entry.solvent_smiles}</td> : null}
-            {entry.ratio ? <td>{entry.ratio}</td> : null}
+    <div className="relative overflow-x-auto">
+      <table className="w-full text-sm text-left text-gray-500">
+        <tbody>
+          <tr className="text-xs text-gray-700 uppercase bg-gray-50">
+            <th scope="col" className="px-6 py-3">
+              SMILES
+            </th>
+            {props.property[0].solvent_smiles ? (
+              <th scope="col" className="px-6 py-3">
+                Solvent SMILES
+              </th>
+            ) : null}
+            {props.property[0].gas ? (
+              <th scope="col" className="px-6 py-3">
+                Gas
+              </th>
+            ) : null}
+            {props.property[0].ratio ? (
+              <th scope="col" className="px-6 py-3">
+                Ratio
+              </th>
+            ) : null}
+            <th scope="col" className="px-6 py-3">
+              Value
+            </th>
           </tr>
-        ))}
+          {props.property.map((entry, i) => (
+            <tr key={i} className="bg-white border-b">
+              <td
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 max-w-[10rem] break-words"
+              >
+                {entry.smiles}
+              </td>
+              {entry.solvent_smiles ? (
+                <td className="px-6 py-4 font-medium max-w-[1rem] break-words">
+                  {entry.solvent_smiles}
+                </td>
+              ) : null}
+              {entry.gas ? (
+                <td className="px-6 py-4 font-medium max-w-[1rem] break-words">
+                  {entry.gas}
+                </td>
+              ) : null}
+              {entry.ratio ? (
+                <td className="px-6 py-4 max-w-[1rem] overflow-hidden">
+                  {entry.ratio}
+                </td>
+              ) : null}
+              <td className="px-6 py-4 max-w-[1rem] overflow-hidden">
+                {entry.value}
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
-    </>
+    </div>
   );
 }
 

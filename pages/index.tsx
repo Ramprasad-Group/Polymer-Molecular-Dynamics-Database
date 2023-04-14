@@ -50,7 +50,7 @@ export default function Home() {
               className={styles.card}
             >
               <h2 className={inter.className}>
-                {(properties as any)[slug]} <span>-&gt;</span>
+                {(properties as any)[slug].name} <span>-&gt;</span>
               </h2>
               <p className={inter.className}>
                 Check all the simulation data for this property.

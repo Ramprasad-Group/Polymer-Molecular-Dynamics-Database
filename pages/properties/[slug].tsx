@@ -2,20 +2,21 @@ import { GetStaticPaths, GetStaticProps } from "next";
 
 import { ParsedUrlQuery } from "querystring";
 import { supabase } from "./../../lib/supabaseClient";
+import { useRouter } from 'next/router'
 
 interface Params extends ParsedUrlQuery {
   slug: string;
 }
 
 export const properties = {
-  Tg: "Glass Transition Temperature",
-  gas_diffusivity: "Gas Diffusivity",
-  gas_solubility: "Gas Solubility",
-  solvent_diffusivity: "Solvent Diffusivity",
+  Tg: {name: "Glass Transition Temperature", unit: "(K)"},
+  gas_diffusivity: {name: "Gas Diffusivity", unit: "(cm2/s)"},
+  gas_solubility: {name: "Gas Solubility", unit: "(cc(STP)/cc*cmHg)"},
+  solvent_diffusivity: {name: "Solvent Diffusivity", unit: "(cm2/s)"},
 };
 
 function Page(props: {
-  property: {
+  data: {
     smiles: string;
     value: number;
     gas?: string; // for gas diffusivity and solubility
@@ -23,34 +24,39 @@ function Page(props: {
     ratio?: number; // for solvent diffusivity
   }[];
 }) {
+  const router = useRouter()
+  const { slug } = router.query
+  const property = (properties as any)[slug as string];
+
   return (
     <div className="relative overflow-x-auto">
+      <h1 className="text-3xl font-bold my-6 text-center">{property.name} </h1>
       <table className="w-full text-sm text-left text-gray-500">
         <tbody>
-          <tr className="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr className="text-xs text-gray-700 bg-gray-50">
             <th scope="col" className="px-6 py-3">
               SMILES
             </th>
-            {props.property[0].solvent_smiles ? (
+            {props.data[0].solvent_smiles ? (
               <th scope="col" className="px-6 py-3">
                 Solvent SMILES
               </th>
             ) : null}
-            {props.property[0].gas ? (
+            {props.data[0].gas ? (
               <th scope="col" className="px-6 py-3">
                 Gas
               </th>
             ) : null}
-            {props.property[0].ratio ? (
+            {props.data[0].ratio ? (
               <th scope="col" className="px-6 py-3">
                 Ratio
               </th>
             ) : null}
             <th scope="col" className="px-6 py-3">
-              Value
+              Value {property.unit}
             </th>
           </tr>
-          {props.property.map((entry, i) => (
+          {props.data.map((entry, i) => (
             <tr key={i} className="bg-white border-b">
               <td
                 scope="row"
@@ -70,11 +76,11 @@ function Page(props: {
               ) : null}
               {entry.ratio ? (
                 <td className="px-6 py-4 max-w-[1rem] overflow-hidden">
-                  {entry.ratio}
+                  {entry.ratio.toFixed(4)}
                 </td>
               ) : null}
               <td className="px-6 py-4 max-w-[1rem] overflow-hidden">
-                {entry.value}
+                {slug == 'gas_diffusivity' ? entry.value.toExponential(): entry.value.toFixed(4)}
               </td>
             </tr>
           ))}
@@ -102,9 +108,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   let { data } = await supabase.from(slug).select();
 
   return {
-    props: {
-      property: data,
-    },
+    props: { data },
   };
 };
 
